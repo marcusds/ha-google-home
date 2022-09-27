@@ -51,7 +51,6 @@ class GlocaltokensApiClient:
         android_id: str | None = None,
         zeroconf_instance: Zeroconf | None = None,
     ):
-        """Sample API Client."""
         self.hass = hass
         self._username = username
         self._password = password
@@ -94,6 +93,7 @@ class GlocaltokensApiClient:
             google_devices = await self.hass.async_add_executor_job(_get_google_devices)
             self.google_devices = [
                 GoogleHomeDevice(
+                    hass=self.hass,
                     device_id=device.device_id,
                     name=device.device_name,
                     auth_token=device.local_auth_token,

@@ -7,9 +7,15 @@ import logging
 import sys
 from typing import List
 
+from homeassistant.core import HomeAssistant
 from homeassistant.util.dt import as_local, utc_from_timestamp
+from homeassistant.helpers.dispatcher import async_dispatcher_send
 
-from .const import DATETIME_STR_FORMAT, GOOGLE_HOME_ALARM_DEFAULT_VALUE
+from .const import (
+    DATETIME_STR_FORMAT,
+    GOOGLE_HOME_ALARM_DEFAULT_VALUE,
+    SIGNAL_ADD_DEVICE,
+)
 from .types import (
     AlarmJsonDict,
     BTJsonDict,
@@ -32,12 +38,14 @@ class GoogleHomeDevice:
 
     def __init__(
         self,
+        hass: HomeAssistant,
         device_id: str,
         name: str,
         auth_token: str | None,
         ip_address: str | None = None,
         hardware: str | None = None,
     ):
+        self.hass = hass
         self.device_id = device_id
         self.name = name
         self.auth_token = auth_token
@@ -63,6 +71,9 @@ class GoogleHomeDevice:
             )
             for device in devices
         ]
+
+        for device in self._bt_devices:
+            async_dispatcher_send(self.hass, SIGNAL_ADD_DEVICE, device)
 
     def set_alarms(self, alarms: list[AlarmJsonDict]) -> None:
         """Stores alarms as GoogleHomeAlarm objects"""
@@ -204,7 +215,8 @@ class GoogleHomeBTDevice:
         self.name = name
 
     def as_dict(self) -> GoogleHomeBTDeviceDict:
-        """Return typed dict representation."""
+        """Return typed dict representation and send add new device dispatch."""
+
         return {
             "mac_address": self.mac_address,
             "device_class": self._decode_device_class(),

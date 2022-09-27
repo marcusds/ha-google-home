@@ -50,6 +50,19 @@ SERVICE_ATTR_ALARM_ID: Final = "alarm_id"
 SERVICE_ATTR_TIMER_ID: Final = "timer_id"
 SERVICE_UPDATE_BLUETOOTH: Final = "update_bluetooth"
 
+# Signals
+SIGNAL_ADD_DEVICE: Final = "add_bluetooth_device"
+SIGNAL_DELETE_DEVICE: Final = "delete_bluetooth_device"
+
+# Tracking
+DEV_CLIENT_MODEL = "Connected Client"
+DEV_MANUFACTURER = "NA"
+ATTR_IDENTIFIERS = "identifiers"
+ATTR_MANUFACTURER = "manufacturer"
+ATTR_MODEL = "model"
+ATTR_SW_VERSION = "sw_version"
+ATTR_CONNECTIONS = "connections"
+
 # Configuration and options
 CONF_ANDROID_ID: Final = "android_id"
 CONF_USERNAME: Final = "username"
